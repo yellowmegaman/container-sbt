@@ -51,3 +51,20 @@ steps:
       from_secret: quay_password
   commands:
   - packer build "$DRONE_REPO_NAME".json
+
+---
+kind: pipeline
+name: trigger dependend builds
+steps:
+- name: trigger
+  image: plugins/downstream
+  settings:
+    server: https://cloud.drone.io
+    token:
+      from_secret: drone_token
+    fork: true
+    repositories:
+      - yellowmegaman/container-sbt-npm
+
+depends_on:
+- deiban-buster-jdk8-sbt
